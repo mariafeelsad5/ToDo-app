@@ -1,35 +1,28 @@
 import 'package:flutter/material.dart';
-import '../HomeLayout.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:untitled2/components/to_do_cubit.dart';
 
-class NewTasks extends StatefulWidget {
-  const NewTasks({super.key});
-
-  @override
-  State<NewTasks> createState() => _NewTasksState();
-}
-
-class _NewTasksState extends State<NewTasks> {
+class NewTasks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Map>>(
-      future: getTasksFromDatabase(db: database),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text("Error: ${snapshot.error}"));
-        } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-          var tasks = snapshot.data!;
+    return BlocConsumer<ToDoCubit, ToDoState>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        var cubit = BlocProvider.of<ToDoCubit>(context);
+        if (cubit.tasks.isEmpty) {
+          return Center(child: Text("No Tasks Yet"));
+        } else {
           return ListView.builder(
-            itemCount: tasks.length,
+            itemCount: cubit.tasks.length,
             itemBuilder: (context, index) {
-              var task = tasks[index];
+              var task = cubit.tasks[index];
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Card(
                   elevation: 3,
                   child: ListTile(
-                    leading: CircleAvatar(   radius: 40,
+                    leading: CircleAvatar(
+                      radius: 40,
                       backgroundColor: Colors.blueGrey,
                       child: Text(
                         task['time'],
@@ -43,8 +36,6 @@ class _NewTasksState extends State<NewTasks> {
               );
             },
           );
-        } else {
-          return Center(child: Text("No Tasks Yet"));
         }
       },
     );
