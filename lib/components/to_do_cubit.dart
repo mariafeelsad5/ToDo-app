@@ -12,6 +12,10 @@ class ToDoCubit extends Cubit<ToDoState> {
   ToDoCubit() : super(ToDoInitial()) {
     createDatabase();
   }
+List newtask =[];
+  List donetask =[];
+  List archivetask =[];
+  List<int> pinnedTasks = [];
 
   late Database database;
   int currentIndex = 0;
@@ -33,7 +37,7 @@ class ToDoCubit extends Cubit<ToDoState> {
     emit(ChangeNavBarState());
   }
 
-  Future<void> createDatabase() async {
+  void createDatabase() async {
     openDatabase(
       "todo.db",
       version: 1,
@@ -46,36 +50,80 @@ class ToDoCubit extends Cubit<ToDoState> {
       onOpen: (db) {
         print("opened database");
         database = db;
-        getTasksFromDatabase();
+        getTasksFromDatabase(db: database);
       },
     ).then((value) {
       database = value;
 
     });
   }
+void opened (){
 
-  List<Map> tasks = [];
-  Future<void> getTasksFromDatabase() async {
-    tasks = await database.rawQuery('SELECT * FROM Tasks');
+
+
+}
+
+  Future<void> getTasksFromDatabase({required db}) async {
+
+
+    donetask = [];
+    archivetask = [];
+
+   var alltask=[];
+   newtask=alltask;
+   newtask=[];
+    alltask = await db.rawQuery('SELECT * FROM Tasks');
 
     print("------ Tasks in DB ------");
-    for (var task in tasks) {
-      print(task);
+    for (var task in alltask) {
+      if (task ['status'] == 'newtask') {
+        newtask.add(task);
+      } else if (task['status'] == 'donetask') {
+        donetask.add(task);
+
+      } else {
+        archivetask.add(task);
+      }
     }
+
+    print(alltask);
     emit(GetDBStates());
+  }
+ updateDatabase({required String status, required int id})async{
+    return database.rawUpdate
+      ('UPDATE tasks SET status = ? WHERE id = ?',['$status','$id'],).
+    then((value){
+
+      print("update is $value");
+      getTasksFromDatabase(db: database);
+    }) ;
+
+
   }
 
 
-  Future<void> insertDatabase({
+  deleteDatabase({ required int id})async{
+    return database.rawDelete('DELETE FROM tasks WHERE id = ?',['$id'],).
+    then((value){
+
+      print("delete is $value");
+      getTasksFromDatabase(db: database);
+    }) ;
+
+
+  }
+
+
+  insertDatabase({
     required String title,
     required String date,
     required String time,
   }) async {
     await database.transaction((txn) async {
-      await txn.rawInsert(
-        "INSERT INTO Tasks (title, date, time, status) VALUES('$title', '$date', '$time','new task')",
+      await txn.rawInsert (
+        "INSERT INTO Tasks (title, date, time, status) VALUES('$title', '$date', '$time','newtask')",
       );
     });
-    await getTasksFromDatabase();
+    await getTasksFromDatabase(db: database);
   }
 }

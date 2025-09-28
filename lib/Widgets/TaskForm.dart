@@ -28,8 +28,11 @@ class TaskForm extends StatelessWidget {
         children: [
           TextFormField(
             controller: titleController,
-            decoration: InputDecoration(
+            decoration:InputDecoration(
               labelText: "Title",
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(),
               prefixIcon: Icon(Icons.title),
             ),
             validator: (value) {
@@ -45,6 +48,9 @@ class TaskForm extends StatelessWidget {
             readOnly: true,
             decoration: InputDecoration(
               labelText: "Date",
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(),
               prefixIcon: Icon(Icons.calendar_today),
             ),
             onTap: () async {
@@ -70,6 +76,9 @@ class TaskForm extends StatelessWidget {
             readOnly: true,
             decoration: InputDecoration(
               labelText: "Time",
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(),
               prefixIcon: Icon(Icons.access_time),
             ),
             onTap: () async {

@@ -21,7 +21,7 @@ class _HomeLayoutState extends State<HomeLayout> {
     return BlocConsumer<ToDoCubit, ToDoState>(
       listener: (context, state) {},
       builder: (context, state) {
-        return Scaffold(
+        return Scaffold(backgroundColor: Colors.blueGrey.shade900,
           appBar: AppBar(
             backgroundColor: Colors.blueGrey.shade400,
             title: Text(cubit.title[cubit.currentIndex]),
@@ -33,17 +33,17 @@ class _HomeLayoutState extends State<HomeLayout> {
             onTap: (index) {
               cubit.changenabar(index);
             },
-            backgroundColor: Colors.blueGrey.shade100,
+            backgroundColor: Colors.blueGrey.shade400,
             items: const [
-              BottomNavigationBarItem(icon: Icon(Icons.menu), label: "Tasks"),
-              BottomNavigationBarItem(icon: Icon(Icons.check_circle_outline), label: "Done"),
-              BottomNavigationBarItem(icon: Icon(Icons.archive), label: "Archived"),
+              BottomNavigationBarItem(icon: Icon(Icons.menu,color: Colors.white,), label: "Tasks"),
+              BottomNavigationBarItem(icon: Icon(Icons.check_circle_outline,color: Colors.white,), label: "Done"),
+              BottomNavigationBarItem(icon: Icon(Icons.archive,color: Colors.white,), label: "Archived",),
             ],
           ),
-          floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.edit),
+          floatingActionButton: FloatingActionButton(backgroundColor: Colors.blueGrey.shade400,
+            child: Icon(Icons.edit,color: Colors.white,),
             onPressed: () {
-              showModalBottomSheet(
+              showModalBottomSheet( backgroundColor: Colors.blueGrey.shade400,
                 context: context,
                 isScrollControlled: true,
                 builder: (context) {
@@ -57,8 +57,10 @@ class _HomeLayoutState extends State<HomeLayout> {
                           right: 20,
                           top: 20,
                         ),
-                        child: SingleChildScrollView(
+                        child:
+                        SingleChildScrollView(
                           child: TaskForm(
+
                             formKey: formKey,
                             titleController: titleController,
                             dateController: dateController,
@@ -68,9 +70,9 @@ class _HomeLayoutState extends State<HomeLayout> {
                       ),
                       Positioned(
                         right: 20,
-                        top: -30, // فوق الشيت مباشرة
-                        child: FloatingActionButton(
-                          child: Icon(Icons.add), // الحجم العادي
+                        top: -30,
+                        child: FloatingActionButton(backgroundColor: Colors.blueGrey.shade400,
+                          child: Icon(Icons.add,color: Colors.white,),
                           onPressed: () {
                             if (formKey.currentState!.validate()) {
                               cubit.insertDatabase(
@@ -79,11 +81,13 @@ class _HomeLayoutState extends State<HomeLayout> {
                                 time: timeController.text,
                               );
                               Navigator.pop(context);
+                              titleController.clear();
+                              dateController.clear();
+                              timeController.clear();
                             }
                           },
                         ),
                       ),
-
                     ],
                   );
                 },

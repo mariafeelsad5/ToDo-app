@@ -9,3 +9,5 @@ class InsertedDBStates extends ToDoState{}
 class GetDBStates extends ToDoState{}
 class ChangeNavBarState extends ToDoState{}
 class ChangeFabIconState extends ToDoState{}
+class UpdateDBstates extends ToDoState{}
+class DeleteDBstates extends ToDoState{}
